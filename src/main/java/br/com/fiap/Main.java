@@ -82,11 +82,12 @@ public class Main {
 
         try {
             manager.getTransaction().begin();
-            manager.persist(benefrancis);
+            manager.persist(holding);
             manager.getTransaction().commit();
 
 
             //Métodos para consultar aqui:
+            System.out.println(holding);
 
 
         } catch (Exception e) {
@@ -103,7 +104,7 @@ public class Main {
         } finally {
             manager.close();
             factory.close();
-            System.out.println(benefrancis);
+            System.out.println(holding);
         }
 
     }

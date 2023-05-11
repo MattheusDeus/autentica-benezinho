@@ -1,15 +1,44 @@
 package br.com.fiap.sistema.model;
 
 import br.com.fiap.pessoa.model.Pessoa;
+import jakarta.persistence.*;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
+@Entity
+@Table(name = "TB_SISTEMA", uniqueConstraints ={
+        @UniqueConstraint(name = "UK_SIGLA", columnNames = "SIGLA")
+})
 public class Sistema {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_SISTEMA")
+    @SequenceGenerator(name = "SQ_SISTEMA", sequenceName = "SQ_SISTEMA")
+    @Column(name = "ID_SISTEMA")
     private Long id;
+    @Column(name = "NOME")
     private String nome;
+    @Column(name = "SIGLA")
     private String sigla;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "TB_RESPONSAVEIS",
+            joinColumns = {
+                    @JoinColumn(
+                            name = "ID_SISTEMA",
+                            referencedColumnName = "ID_SISTEMA",
+                            foreignKey = @ForeignKey(name = "FK_RESPONSAVEIS")
+                    )
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(
+                            name = "ID_RESPONSAVEL",
+                            referencedColumnName = "ID_PESSOA",
+                            foreignKey = @ForeignKey(name = "FK_RESPONSAVEL")
+                    )
+            }
+
+    )
     private Set<Pessoa> responsaveis = new LinkedHashSet<>();
 
     public Sistema(String nome, String sigla) {
